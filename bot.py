@@ -173,7 +173,7 @@ def gate(message) -> bool:
             f"🔴  <b>sʏsᴛᴇᴍ ᴏғғʟɪɴᴇ</b>\n"
             f"<i>{DIV}</i>\n"
             "ᴍᴀɪɴᴛᴇɴᴀɴᴄᴇ ɪɴ ᴘʀᴏɢʀᴇss.\n"
-            "📢  ᴜᴘᴅᴀᴛᴇs: @MindRupture"
+            "📢  ᴜᴘᴅᴀᴛᴇs: @LaceraOsint"
         )
         return False
     status = check_access(uid)
@@ -261,7 +261,7 @@ def auto_delete_with_warning(chat_id: int, msg_id: int, delay: int = AUTO_DELETE
     try:
         warn_id = bot.send_message(
             chat_id,
-            f"⏳  <i>ʏᴇ ʀᴇsᴜʟᴛ  <b>{delay}s</b>  ᴍᴇɴ ᴀᴜᴛᴏ-ᴅᴇʟᴇᴛᴇ ʜᴏ ᴊᴀᴀᴇɢᴀ.</i>",
+            f"⏳  <i>ʏᴇ ʀᴇsᴜʟᴛ  <b>{delay}s</b>  ᴍᴇ ᴀᴜᴛᴏ-ᴅᴇʟᴇᴛᴇ ʜᴏ ᴊᴀᴀᴇɢᴀ.</i>",
         ).message_id
     except Exception:
         pass
@@ -607,7 +607,7 @@ def cmd_start(message):
         "  ✦  <b>ʟᴀᴄᴇʀᴀ ᴏsɪɴᴛ</b>  —  ᴅᴇᴇᴘ ɪɴᴛᴇʟʟɪɢᴇɴᴄᴇ\n"
         "╚══════════════════════════\n\n"
         f"ᴡᴇʟᴄᴏᴍᴇ, <b>{name}</b>.\n"
-        "ᴍᴜʟᴛɪ-ʟᴀʏᴇʀ ᴅᴀᴛᴀ ɪɴᴛᴇʟʟɪɢᴇɴᴄᴇ ᴀᴛ ʏᴏᴜʀ ᴄᴏᴍᴍᴀɴᴅ.\n\n"
+        "ᴍᴜʟᴛɪ-ʟᴀʏᴇʀ ᴅᴀᴛᴀ ɪɴᴛᴇʟʟɪɢᴇɴᴄᴇ ᴀᴛ ʏᴏᴜʀ ᴄᴏᴍᴍᴀɴᴅ use /help to check all commands.\n\n"
         "◈  <b>sᴇᴀʀᴄʜ ᴍᴏᴅᴇs</b>\n"
         f"<i>{DIV}</i>\n"
         "  📞  /number   <code>+91/+92/+1/+44...</code>\n"
