@@ -1,45 +1,3 @@
-"""
-bot.py — LaceraOSINT Telegram Bot  (FINAL PRODUCTION BUILD)
-============================================================
-All fixes applied, all upgrades done, zero known bugs.
-
-Changelog (cumulative):
-  - Thread-safe USER_COOLDOWN, cash_reports, join_cache
-  - TOCTOU-safe atomic credit deduction
-  - BOT_SHUTDOWN via threading.Event (was bare bool)
-  - is_joined() TTL cache (120s) + forced invalidation on check_join
-  - All admin cmds: from_user None guard + message.text None guard
-  - Banned users: silent /start block; gate() correct order
-  - fmt_bar: fixed-width 10-block bar (no message bloat)
-  - safe_reply_to: HTML-safe truncation on "too long" 400
-  - safe_edit_message: 429 retry loop
-  - safe_send_message: per-attempt logging
-  - alert_admins: parse_mode="HTML" added
-  - mk_buy: ADMIN_USERNAME lstrip('@')
-  - mk_join: skip negative chat IDs; verify button only when channels exist
-  - pg_ and copy_ callbacks: qid format validation
-  - check_join callback: cache invalidated before re-check
-  - cmd_userlist: 0.5s sleep between chunks to avoid 429
-  - cmd_usedcode: code length capped at 64
-  - cmd_addcredits / cmd_detail / cmd_userinfo: target UID > 0 guard
-  - cmd_lock / cmd_unlock: empty query guard
-  - do_search: message.date None guard; validate_query for all non-number modes
-  - auto_delete_with_warning: semaphore-limited (max 50 threads)
-  - Polling loop: consecutive crash counter (halts at 10)
-  - OWNER_IDS: empty warning at startup
-  - num_threads=8 on TeleBot
-  - parse_duration: cap at 365 days; unknown unit treated as minutes
-  - normalize_phone: 30-char input cap; digits-only validation
-  - _extract_country_code: O(1) dict lookup
-  - Polling: jitter on 502/503/504; _parse_retry_after centralised
-  - fmt_expiry: try/except around int(ts)
-  - join_cache cleanup in cache_cleanup
-  - qid length: 12 chars
-  - _guarded_delete semaphore-wrapped auto-delete threads
-  - Upgrade: UPGRADE: _shutdown_event not checked in background threads (noted)
-  - Upgrade: add_referral dead variable removed
-"""
-
 import os
 import re
 import html
@@ -658,7 +616,7 @@ def mk_join() -> InlineKeyboardMarkup:
 def mk_buy() -> InlineKeyboardMarkup:
     mu = InlineKeyboardMarkup(row_width=2)
     mu.add(
-        InlineKeyboardButton("💎  ʙᴜʏ ᴄʀᴇᴅɪᴛs", url=f"https://t.me/{ADMIN_USERNAME}"),
+        InlineKeyboardButton("💻 ʙᴜʏ ᴄʀᴇᴅɪᴛs", url=f"https://t.me/{ADMIN_USERNAME}"),
         InlineKeyboardButton("✦  ʀᴇғᴇʀ & ᴇᴀʀɴ", callback_data="refer_now"),
     )
     mu.add(
@@ -709,7 +667,7 @@ def cmd_start(message):
                 safe_send_message(
                     ref_id,
                     f"🎁  <b>ʀᴇғᴇʀʀᴀʟ ʙᴏɴᴜs</b>\n<i>{DIV}</i>\n"
-                    "ᴀ ɴᴇᴡ ᴏᴘᴇʀᴀᴛɪᴠᴇ ᴊᴏɪɴᴇᴅ ᴠɪᴀ ʏᴏᴜʀ ʟɪɴᴋ.\n"
+                    "ᴀ ɴᴇᴡ user ᴊᴏɪɴᴇᴅ ᴠɪᴀ ʏᴏᴜʀ ʟɪɴᴋ.\n"
                     "✦  <b>+2 ᴄʀᴇᴅɪᴛs</b> ᴄʀᴇᴅɪᴛᴇᴅ.",
                 )
             except Exception:
@@ -728,12 +686,12 @@ def cmd_start(message):
         "ᴍᴜʟᴛɪ-ʟᴀʏᴇʀ ᴅᴀᴛᴀ ɪɴᴛᴇʟʟɪɢᴇɴᴄᴇ ᴀᴛ ʏᴏᴜʀ ᴄᴏᴍᴍᴀɴᴅ. /help ᴅᴇᴋʜᴏ.\n\n"
         "◈  <b>sᴇᴀʀᴄʜ ᴍᴏᴅᴇs</b>\n"
         f"<i>{DIV}</i>\n"
-        "  📞  /number   <code>+91/+92/+1/+44...</code>\n"
-        "  📧  /email    <code>user@mail.com</code>\n"
-        "  🪪  /aadhar   <code>XXXXXXXXXXXX</code>\n"
-        "  💳  /pan      <code>ABCDE1234F</code>\n"
-        "  🚗  /vehicle  <code>MH12AB1234</code>\n"
-        "  🌐  /ip       <code>1.2.3.4</code>\n\n"
+        "  📞 > /number   <code>+91/+92/+1/...</code>\n"
+        "  📧 > /email    <code>user@mail.com</code>\n"
+        "  🪪 > /aadhar   <code>XXXXXXXXXXXX</code>\n"
+        "  💳 > /pan      <code>ABCDE1234F</code>\n"
+        "  🚗 > /vehicle  <code>MH12AB1234</code>\n"
+        "  🌐 > /ip       <code>1.2.3.4</code>\n\n"
         "◈  <b>ᴀᴄᴄᴏᴜɴᴛ</b>\n"
         f"<i>{DIV}</i>\n"
         "  📊  /profile  ·  ✦  /refer  ·  🎫  /redeem\n\n"
@@ -852,11 +810,11 @@ def cmd_redeem(message):
         return safe_reply_to(message, "❌  <b>ɪɴᴠᴀʟɪᴅ ᴄᴏᴅᴇ ғᴏʀᴍᴀᴛ.</b>")
     result = redeem_code(message.from_user.id, raw_code)
     if result is None:
-        safe_reply_to(message, "❌  <b>ɪɴᴠᴀʟɪᴅ ᴄᴏᴅᴇ.</b>")
+        safe_reply_to(message, "❌  <b>ɪɴᴠᴀʟɪᴅ ᴄᴏᴅᴇ 🫩.</b>")
     elif result == -1:
-        safe_reply_to(message, "⚠️  <b>ᴄᴏᴅᴇ ᴀʟʀᴇᴀᴅʏ ᴜsᴇᴅ.</b>")
+        safe_reply_to(message, "⚠️  <b>ᴄᴏᴅᴇ ᴀʟʀᴇᴀᴅʏ ᴜsᴇᴅ 😹.</b>")
     elif result == -2:
-        safe_reply_to(message, "⏳  <b>ᴄᴏᴅᴇ ᴇxᴘɪʀᴇ ʜᴏ ɢᴀʏᴀ.</b>")
+        safe_reply_to(message, "⏳  <b>ᴄᴏᴅᴇ ᴇxᴘɪʀᴇ ho chuka 🖕.</b>")
     else:
         safe_reply_to(
             message,
@@ -1004,7 +962,7 @@ def do_search(message, mode: str, query: str = None) -> None:
         wait = bot.send_message(
             message.chat.id,
             "╔══════════════════════════\n"
-            f"  ⟳  <b>sᴄᴀɴɴɪɴɢ ᴅᴀᴛᴀʙᴀsᴇs</b>\n"
+            f"  ⟳  <b>RUKJA DHUND RAHA DETAIL 🧑‍💻 </b>\n"
             "╚══════════════════════════\n"
             f"  {country_line}<code>{html.escape(q)}</code>\n"
             "  <i>ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ...</i>",
@@ -1675,7 +1633,7 @@ def handle_cb(call):
             f"🚫  <code>{target}</code>  ʙᴀɴ ʜᴏ ɢᴀʏᴀ.",
             call.message.chat.id, call.message.message_id,
         )
-        safe_answer_callback(call.id, "✅  ʙᴀɴ ᴅᴏɴᴇ")
+        safe_answer_callback(call.id, "✅ ban - chud gaya user ")
 
     # ── Giveall confirm ──
     elif call.data.startswith("giveall_confirm_"):
