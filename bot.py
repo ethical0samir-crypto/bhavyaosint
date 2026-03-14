@@ -804,7 +804,7 @@ def cmd_lookup(message):
             prompt = (
                 f"{emoji}  <b>ɴᴜᴍʙᴇʀ ᴅᴀᴀʟᴏ</b>\n"
                 f"<i>{DIV}</i>\n"
-                "🇮🇳  <code>+91XXXXXXXXXX</code>  ʏᴀ  <code>XXXXXXXXXX</code>\n"
+                "🇮🇳  <code>+91XXXXXXXXXX</code>  ʏᴀ  <code>eg-9914173314</code>\n"
                 "🇵🇰  <code>+92XXXXXXXXXX</code>\n"
                 "🇧🇩  <code>+880XXXXXXXXXX</code>"
             )
@@ -1518,7 +1518,7 @@ def handle_cb(call):
                 f"◉  <b>ᴘʀᴏғɪʟᴇ</b>\n<i>{DIV}</i>\n"
                 f"💎  ᴄʀᴇᴅɪᴛs   ›  <code>{credits}</code>\n"
                 f"📊  {fmt_bar(daily_used, DAILY_LIMIT)}\n"
-                f"🆓  ʙᴀᴄʜᴇ     ›  <code>{remaining}</code>\n"
+                f"🆓  remaining ›  <code>{remaining}</code>\n"
                 f"⏱️  ʀᴇsᴇᴛ     ›  <code>{fmt_reset(daily_reset)}</code>\n"
                 f"🔗  ʀᴇғᴇʀʀᴀʟs ›  <code>{refer_count}</code>",
                 reply_markup=mk_buy(),
