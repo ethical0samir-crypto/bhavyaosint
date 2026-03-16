@@ -80,7 +80,7 @@ WATERMARK = (
     "\n\n"
     f"<i>{'·' * 24}</i>\n"
     "⚡ <b>ʟᴀᴄᴇʀᴀ ᴏsɪɴᴛ</b>  ·  ᴘʀᴇᴍɪᴜᴍ ɪɴᴛᴇʟ\n"
-    f"<a href='https://t.me/NeuroLacera'>@ɴᴇᴜʀᴏʟᴀᴄᴇʀᴀ</a>  ·  "
+    f"<a href='https://t.me/LaceraOsint'>@LaceraOsint</a>  ·  "
     f"<a href='https://t.me/LaceraOsintBot'>@ʟᴀᴄᴇʀᴀᴏsɪɴᴛʙᴏᴛ</a>"
 )
 
@@ -517,7 +517,7 @@ def gate(message) -> bool:
         safe_reply_to(
             message,
             f"🔴  <b>sʏsᴛᴇᴍ ᴏғғʟɪɴᴇ</b>\n<i>{DIV}</i>\n"
-            "ᴍᴀɪɴᴛᴇɴᴀɴᴄᴇ ᴄʜᴀʟ ʀᴀʜɪ ʜᴀɪ.\n📢  @NeuroLacera",
+            "ᴍᴀɪɴᴛᴇɴᴀɴᴄᴇ ᴄʜᴀʟ ʀᴀʜɪ ʜᴀɪ.\n📢  @LaceraOsint",
         )
         return False
     status = check_access(uid)
@@ -580,7 +580,7 @@ def mk_buy() -> InlineKeyboardMarkup:
         InlineKeyboardButton("🔗  ʀᴇғᴇʀ & ᴇᴀʀɴ", callback_data="refer_now"),
     )
     mu.add(
-        InlineKeyboardButton("📢  ᴜᴘᴅᴀᴛᴇs", url="https://t.me/NeuroLacera"),
+        InlineKeyboardButton("📢  ᴜᴘᴅᴀᴛᴇs", url="https://t.me/LaceraOsint"),
         InlineKeyboardButton("🤖  ʙᴏᴛ", url="https://t.me/LaceraOsintBot"),
     )
     return mu
