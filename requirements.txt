@@ -1,6 +1,0 @@
-PyTelegramBotAPI==4.20.0
-requests==2.31.0
-urllib3==2.0.7
-psycopg2-binary>=2.9.9,<2.10
-python-dotenv==1.0.0
-gunicorn==21.2.0
